@@ -1,2 +1,3 @@
-# react-js-use-local-storage
 Кастомный хук useLocalStorage для React JS
+---
+здесь должна быть документация
