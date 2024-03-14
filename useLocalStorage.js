@@ -64,12 +64,12 @@ export function useLocalStorage(key, initialValue) {
 		// Без этого может выдавать ошибки при сборке
 		if (typeof window === 'undefined') console.warn('Хук невозможно использовать не на клиенте')
 		try {
-			// Если передадим пустое значение то удалим записть в localStorage
-			if (value === '') {
+			const nextValue = value instanceof Function ? value(readLocalStorage()) : value
+			// Если передадим пустую строку то удалим записть в localStorage
+			if (nextValue === '') {
 				window.localStorage.removeItem(key)
 				return
 			}
-			const nextValue = value instanceof Function ? value(readLocalStorage()) : value
 			window.localStorage.setItem(key, serializer.write(nextValue))
 			setStorageValue(nextValue)
 			// Если существует одновременно несколько хуков useLocalStorage позволит их синхронизировать
