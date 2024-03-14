@@ -58,6 +58,9 @@ export function useLocalStorage(key, initialValue) {
 		if (!e) return
 		setStorageValue(readLocalStorage())
 	}, [key, readLocalStorage])
+	// Позволит синхронизировать несколько вкладок
+        // Т.к. событие storage является дефолтным и вызывается браузером для обновления localStorage
+	useWindowEventListener('storage', handleLocalStorageChanges)
 	// Слушаем кастомное событие local-storage
 	useWindowEventListener('local-storage', handleLocalStorageChanges)
 	return [storageValue, setValue]
