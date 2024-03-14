@@ -5,7 +5,7 @@ import { useState, useCallback, useEffect } from "react"
  * Хук, который использует localStorage и возвращает привычные для useState [value, setValue]
  * @param {string} key Ключ по которому будет полученно значение из localStorage
  * @param {T | (() => T)} initialValue Начальное значение
- * @param {boolean} useInitialValue Если true то в localStorage сразу же попадёт значение initialValue
+ * @returns {[T, React.Dispatch<T>]}
  * ---
  * Пример использования
  * @example
@@ -38,7 +38,7 @@ import { useState, useCallback, useEffect } from "react"
  *	)
  * }
  */
-export function useLocalStorage(key, initialValue, useInitialValue = true) {
+export function useLocalStorage(key, initialValue) {
 	// Сериализует строку в объект при чтении из стора и записывает в стор объект представленный в виде строки
 	const serializer = {
 		read: v => JSON.parse(v),
@@ -57,7 +57,6 @@ export function useLocalStorage(key, initialValue, useInitialValue = true) {
 	}, [initialValue, key])
 	// В этом стейте храним значение из стора
 	const [storageValue, setStorageValue] = useState(() => {
-		if (useInitialValue) return readLocalStorage()
 		return initialValue instanceof Function ? initialValue() : initialValue
 	})
 	// Данная функция позволяет и обновить значение в localStorage и в state
@@ -65,6 +64,11 @@ export function useLocalStorage(key, initialValue, useInitialValue = true) {
 		// Без этого может выдавать ошибки при сборке
 		if (typeof window === 'undefined') console.warn('Хук невозможно использовать не на клиенте')
 		try {
+			// Если передадим пустое значение то удалим записть в localStorage
+			if (value === '') {
+				window.localStorage.removeItem(key)
+				return
+			}
 			const nextValue = value instanceof Function ? value(readLocalStorage()) : value
 			window.localStorage.setItem(key, serializer.write(nextValue))
 			setStorageValue(nextValue)
