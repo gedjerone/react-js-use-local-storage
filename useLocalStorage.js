@@ -5,38 +5,9 @@ import { useState, useCallback, useEffect } from "react"
  * Хук, который использует localStorage и возвращает привычные для useState [value, setValue]
  * @param {string} key Ключ по которому будет полученно значение из localStorage
  * @param {T | (() => T)} initialValue Начальное значение
- * @returns {[T, React.Dispatch<T>]}
+ * @returns {[T, React.Dispatch<T>]} [value, setValue]
  * ---
- * Пример использования
- * @example
- * import { useLocalStorage } from '@/hooks'
- * export const Component = () => {
- * const [state, setState] = useLocalStorage('test', {
- * 	name: 'Maksim',
- * 	status: 'busy',
- * 	age: 23
- * })
- *
- * const increaseUserAge = (user) => {
- * 	return {
- *	...user,
- * 	age: user?.age + 1
- * 	}
- * }
- *
- *	return (
- *		<main>
- *			<p>Юзер: {state?.name ?? ''}</p>
- *			<p>Возраст: {state?.status ?? ''}</p>
- *			<p>Статус: {state?.age ?? 0}</p>
- *			<button
- *				onClick={
- *					() => setState((prev) => increaseUserAge(prev))
- *				}
- *			>Увеличить возраст</button>
- *		</main>
- *	)
- * }
+ * {@link https://github.com/gedjerone/react-js-use-local-storage.git Пример использования}
  */
 export function useLocalStorage(key, initialValue) {
 	// Сериализует строку в объект при чтении из стора и записывает в стор объект представленный в виде строки
